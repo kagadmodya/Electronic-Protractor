@@ -1,7 +1,6 @@
 /*
- * This file is part of the µOS++ distribution.
- *   (https://github.com/micro-os-plus)
- * Copyright (c) 2014 Liviu Ionescu.
+
+ * Copyright (c) 2019 Chinmay Gore
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -29,41 +28,58 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "diag/Trace.h"
 
-// ----------------------------------------------------------------------------
-//
-// Standalone STM32F4 empty sample (trace via DEBUG).
-//
-// Trace support is enabled by adding the TRACE macro definition.
-// By default the trace messages are forwarded to the DEBUG output,
-// but can be rerouted to any device or completely suppressed, by
-// changing the definitions required in system/src/diag/trace_impl.c
-// (currently OS_USE_TRACE_ITM, OS_USE_TRACE_SEMIHOSTING_DEBUG/_STDOUT).
-//
+#include "stm32f4xx.h"
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_rcc_ex.h"
+#include "stm32f4xx_hal_gpio.h"
 
-// ----- main() ---------------------------------------------------------------
 
-// Sample pragmas to cope with warnings. Please note the related line at
-// the end of this function, used to pop the compiler diagnostics status.
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#pragma GCC diagnostic ignored "-Wmissing-declarations"
-#pragma GCC diagnostic ignored "-Wreturn-type"
+//------------------MACRO DEFINITIONS-----------------------//
+#define LED_PORT													(GPIOG)
+#define GREENLED_PIN_NUMBER              	(GPIO_PIN_13)
+#define REDLED_PIN_NUMBER              	  (GPIO_PIN_14)
 
-int
-main(int argc, char* argv[])
+
+
+//-------------------Configurations------------------------//
+
+GPIO_InitTypeDef GPIO_InitStructure;
+
+
+//--------------------Main Function-----------------------//
+int main()
 {
-  // At this stage the system clock should have already been configured
-  // at high speed.
+  // Initialise the HAL Library; it must be the first function
+  // to be executed before the call of any HAL function.
+  HAL_Init();
 
-  // Infinite loop
-  while (1)
-    {
-       // Add your code here.
-    }
+	//GPIO INIT
+	__HAL_RCC_GPIOG_CLK_ENABLE();
+
+	GPIO_InitStructure.Pin = GREENLED_PIN_NUMBER | REDLED_PIN_NUMBER;
+	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
+  GPIO_InitStructure.Pull = GPIO_PULLUP;
+
+	HAL_GPIO_Init(LED_PORT, &GPIO_InitStructure);
+
+
+	while(1)
+		{
+			HAL_GPIO_WritePin(LED_PORT, GREENLED_PIN_NUMBER | REDLED_PIN_NUMBER, GPIO_PIN_SET);
+			HAL_Delay(1000);
+			HAL_GPIO_WritePin(LED_PORT, GREENLED_PIN_NUMBER|REDLED_PIN_NUMBER, GPIO_PIN_RESET);
+			HAL_Delay(1000);
+		}
+
+	return 0;
 }
 
-#pragma GCC diagnostic pop
+//SysTick Handler is required for HAL_Delay() Function
 
-// ----------------------------------------------------------------------------
+//---------SYSTICK HANDLER----------------//
+void SysTick_Handler(void)
+{
+    HAL_IncTick();
+}
