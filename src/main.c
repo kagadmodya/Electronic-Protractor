@@ -67,8 +67,8 @@ void CPG_LED_Init(void)
 
 	GPIO_InitStructure.Pin = GREENLED_PIN_NUMBER | REDLED_PIN_NUMBER;
 	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
-  GPIO_InitStructure.Pull = GPIO_PULLUP;
+	GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
+	GPIO_InitStructure.Pull = GPIO_PULLUP;
 
 	HAL_GPIO_Init(LED_PORT, &GPIO_InitStructure);
 }
