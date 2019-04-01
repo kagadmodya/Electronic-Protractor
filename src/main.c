@@ -53,9 +53,7 @@
 
 
 //------------------MACRO DEFINITIONS-----------------------//
-#define LED_PORT													(GPIOG)
-#define GREENLED_PIN_NUMBER              	(GPIO_PIN_13)
-#define REDLED_PIN_NUMBER              	  (GPIO_PIN_14)
+
 
 //-------------------Configurations------------------------//
 
@@ -64,19 +62,6 @@ USART_HandleTypeDef USART1Handle;
 
 
 //---------------Private Function Definitions--------------//
-
-void CPG_LED_Init(void)
-{
-	__HAL_RCC_GPIOG_CLK_ENABLE();			//GPIO Port G Clock init as the leds are connected to Port G pins
-
-	GPIO_InitStructure.Pin = GREENLED_PIN_NUMBER | REDLED_PIN_NUMBER;
-	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
-  GPIO_InitStructure.Pull = GPIO_PULLUP;
-
-	HAL_GPIO_Init(LED_PORT, &GPIO_InitStructure);
-}
-
 void CPG_USART_Init(void)
 {
 	__HAL_RCC_GPIOA_CLK_ENABLE();			//GPIO Port A Clock init as UART pins are on port A
@@ -113,8 +98,6 @@ int main()
   // to be executed before the call of any HAL function.
   HAL_Init();
 
-  //Initialise Green and red leds.
-  CPG_LED_Init();
   //Initialise USART1
   CPG_USART_Init();
 
@@ -122,10 +105,7 @@ int main()
 
 	while(1)
 		{
-			HAL_GPIO_WritePin(LED_PORT, GREENLED_PIN_NUMBER , GPIO_PIN_SET);
 			HAL_USART_Transmit(&USART1Handle, &buffer, sizeof(buffer), HAL_MAX_DELAY);
-			HAL_Delay(500);
-			HAL_GPIO_WritePin(LED_PORT, GREENLED_PIN_NUMBER, GPIO_PIN_RESET);
 			HAL_Delay(500);
 		}
 
