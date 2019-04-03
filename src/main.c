@@ -53,12 +53,13 @@
 
 
 //------------------MACRO DEFINITIONS-----------------------//
-
+#define I2C_ADDRESS 0x53
 
 //-------------------Configurations------------------------//
 
 GPIO_InitTypeDef GPIO_InitStructure;
 USART_HandleTypeDef USART1Handle;
+I2C_HandleTypeDef  I2C1Handle;
 
 
 //---------------Private Function Definitions--------------//
@@ -70,7 +71,7 @@ void CPG_USART_Init(void)
 	/* GPIO Initialization*/
 
 	GPIO_InitStructure.Pin = GPIO_PIN_9 | GPIO_PIN_10 ; // UART TX RX pins
-	GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;					// ALternet Function
+	GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;					// Alternet Function
   GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
   GPIO_InitStructure.Pull = GPIO_PULLUP;
   GPIO_InitStructure.Alternate = GPIO_AF7_USART1;
@@ -90,6 +91,33 @@ void CPG_USART_Init(void)
 }
 
 
+void CPG_I2C_Init(void)
+{
+	__HAL_RCC_I2C1_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();			//GPIO Port B Clock init as I2C pins are on port A
+
+	/* GPIO Initialization*/
+	GPIO_InitStructure.Pin = GPIO_PIN_8 | GPIO_PIN_9 ; // UART TX RX pins
+	GPIO_InitStructure.Mode = GPIO_MODE_AF_OD;					// Alternet Function
+  GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
+  GPIO_InitStructure.Pull = GPIO_PULLUP;
+  GPIO_InitStructure.Alternate = GPIO_AF4_I2C1;
+
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+  /* I2C 1 Initialization*/
+  I2C1Handle.Instance = I2C1;
+  I2C1Handle.Init.ClockSpeed = 50000;
+  I2C1Handle.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  I2C1Handle.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  I2C1Handle.Init.DutyCycle       = I2C_DUTYCYCLE_16_9;
+  I2C1Handle.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  I2C1Handle.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  I2C1Handle.Init.OwnAddress1 = I2C_ADDRESS;
+
+  HAL_I2C_Init(&I2C1Handle);
+
+}
 
 //--------------------Main Function-----------------------//
 int main()
@@ -100,13 +128,17 @@ int main()
 
   //Initialise USART1
   CPG_USART_Init();
+  CPG_I2C_Init();
 
-  char buffer[] = "USART Transmission\r\n";
-
+  char firststr[] = "Transmission Started\r\n";
+  HAL_USART_Transmit(&USART1Handle, &firststr, sizeof(firststr), HAL_MAX_DELAY);
+  char buffer[32] = {};
 	while(1)
 		{
+			HAL_I2C_Master_Receive(&I2C1Handle, I2C_ADDRESS, &buffer, sizeof(buffer), HAL_MAX_DELAY);
+			HAL_Delay(100);
 			HAL_USART_Transmit(&USART1Handle, &buffer, sizeof(buffer), HAL_MAX_DELAY);
-			HAL_Delay(500);
+			HAL_Delay(900);
 		}
 
 	return 0;
@@ -122,3 +154,4 @@ void SysTick_Handler(void)
 {
     HAL_IncTick();
 }
+
