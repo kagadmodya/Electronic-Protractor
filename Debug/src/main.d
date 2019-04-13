@@ -1,4 +1,5 @@
-src/main.o: ../src/main.c ../system/include/cmsis/stm32f4xx.h \
+src/main.o: ../src/main.c ../include/main.h \
+ ../system/include/cmsis/stm32f4xx.h \
  ../system/include/cmsis/stm32f429xx.h ../system/include/cmsis/core_cm4.h \
  ../system/include/cmsis/core_cmInstr.h \
  ../system/include/cmsis/cmsis_gcc.h \
@@ -73,7 +74,11 @@ src/main.o: ../src/main.c ../system/include/cmsis/stm32f4xx.h \
  ../system/include/stm32f4-hal/stm32f4xx_hal_dfsdm.h \
  ../system/include/stm32f4-hal/stm32f4xx_hal_lptim.h \
  ../system/include/stm32f4-hal/stm32f4xx_hal_rcc_ex.h \
- ../system/include/stm32f4-hal/stm32f4xx_hal_gpio_ex.h
+ ../system/include/stm32f4-hal/stm32f4xx_hal_gpio_ex.h \
+ ../include/stm32f4xx_hal_conf.h \
+ ../system/include/stm32f4-hal/stm32f4xx_hal_i2c_ex.h
+
+../include/main.h:
 
 ../system/include/cmsis/stm32f4xx.h:
 
@@ -228,3 +233,7 @@ src/main.o: ../src/main.c ../system/include/cmsis/stm32f4xx.h \
 ../system/include/stm32f4-hal/stm32f4xx_hal_rcc_ex.h:
 
 ../system/include/stm32f4-hal/stm32f4xx_hal_gpio_ex.h:
+
+../include/stm32f4xx_hal_conf.h:
+
+../system/include/stm32f4-hal/stm32f4xx_hal_i2c_ex.h:
