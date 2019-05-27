@@ -76,7 +76,8 @@ src/main.o: ../src/main.c ../include/main.h \
  ../system/include/stm32f4-hal/stm32f4xx_hal_rcc_ex.h \
  ../system/include/stm32f4-hal/stm32f4xx_hal_gpio_ex.h \
  ../include/stm32f4xx_hal_conf.h \
- ../system/include/stm32f4-hal/stm32f4xx_hal_i2c_ex.h
+ ../system/include/stm32f4-hal/stm32f4xx_hal_i2c_ex.h \
+ ../system/include/stm32f4-hal/stm32f4xx_hal_exti.h
 
 ../include/main.h:
 
@@ -237,3 +238,5 @@ src/main.o: ../src/main.c ../include/main.h \
 ../include/stm32f4xx_hal_conf.h:
 
 ../system/include/stm32f4-hal/stm32f4xx_hal_i2c_ex.h:
+
+../system/include/stm32f4-hal/stm32f4xx_hal_exti.h:

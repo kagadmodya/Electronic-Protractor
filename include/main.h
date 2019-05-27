@@ -36,6 +36,7 @@ extern "C" {
 #include "stm32f4xx_hal_conf.h"
 #include "stm32f4xx_hal_i2c.h"
 #include "stm32f4xx_hal_i2c_ex.h"
+#include "stm32f4xx_hal_exti.h"
 
 
 /* Macro Definitons ------------------------------------------------------------------*/
@@ -46,6 +47,7 @@ extern "C" {
 GPIO_InitTypeDef GPIO_InitStructure;
 USART_HandleTypeDef USART1Handle;
 I2C_HandleTypeDef  I2C1Handle;
+EXTI_HandleTypeDef extiHandle;
 
 
 
